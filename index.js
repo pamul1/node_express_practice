@@ -69,8 +69,8 @@ app.get('/products', async function (req, res) {
 
 app.get('/products/:id', async (req, res)=>{
     
-    const id_product = req.params.id
-    const sql = `select * from products where id_product = ${id_product}`
+    const product_id = req.params.id
+    const sql = `select * from products where product_id = ${product_id}`
     const result = await db.default.query(sql)
     res.json(result)
 })
@@ -86,9 +86,9 @@ app.post('/products', async (req, res) => {
 })
 
 app.put('/products/:id', async (req, res) => {
-    const id_product = req.params.id
-    const temp = req.body
-    const arr = [tmp.name, tmp.description, tmp.price, tmp.stock, id_product]
+    const product_id = req.params.id
+    const tmp = req.body
+    const arr = [tmp.name, tmp.description, tmp.price, tmp.stock, product_id]
 
     const sql = ` update products
                  set name = $1, 
@@ -105,9 +105,9 @@ app.put('/products/:id', async (req, res) => {
 
 app.delete('/products/:id', async (req, res) => {
 
-    const id_product = req.params.id
-    const sql = `delete from products where id_product = $1`
-    const arr = [id_product]
+    const product_id = req.params.id
+    const sql = `delete from products where product_id = $1`
+    const arr = [product_id]
 
     const resul = await db.default.query(sql, arr)
 
