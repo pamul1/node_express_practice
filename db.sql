@@ -14,3 +14,20 @@ create table products
     price Decimal not null,
     stock Integer not null
 );
+
+create table orders
+(
+    order_id SERIAL PRIMARY Key,
+    user_id int REFERENCES users(user_id),
+    order_date Date DEFAULT current_date,
+    status Text check (status in ('Pending', 'Completed'))
+);
+
+create table details
+(
+    detail_id SERIAL PRIMARY Key,
+    order_id int REFERENCES orders(order_id),
+    product_id int REFERENCES products(product_id),
+    quantity Integer not null,
+    price Decimal not null
+)

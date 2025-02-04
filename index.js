@@ -116,5 +116,59 @@ app.delete('/products/:id', async (req, res) => {
 })
 
 
+app.get('/orders', async function (req, res) {
+
+    const sql = 'select * from orders'
+    const result = await db.default.query(sql)
+    res.status(200).json(result)
+
+})
+
+app.get('/orders/:id', async (req, res)=>{
+    
+    const user_id = req.params.id
+    const sql = `select * from orders where order_id = ${order_id}`
+    const result = await db.default.query(sql)
+    res.json(result)
+})
+
+app.post('/orders', async (req, res) => {
+
+    const tmp = req.body
+    const str = 'insert into orders (date, status) values ($1, $2)'
+    const arr = [tmp.date, tmp.status]
+    const result = await db.default.query(str, arr)
+    res.status(200).json({ message: "Order Created" })
+
+})
+
+app.put('/orders/:id', async (req, res) => {
+    const user_id = req.params.id
+    const tmp = req.body
+    const arr = [tmp.date, tmp.status, order_id]
+
+    const sql = ` update orders 
+                 set date = $1, 
+                     status = $2 
+                    where order_id= $3`
+
+    const resul = db.default.query(sql, arr)
+
+    res.json({ message: "Order Updated" })
+
+})
+
+app.delete('/orders/:id', async (req, res) => {
+
+    const order_id = req.params.id
+    const sql = `delete from orders where order_id = $1`
+    const arr = [order_id]
+
+    const resul = await db.default.query(sql, arr)
+
+    res.json({ message: "Order Deleted" })
+
+})
+
 
 app.listen(3000)
