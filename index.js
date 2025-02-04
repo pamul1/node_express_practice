@@ -143,7 +143,7 @@ app.post('/orders', async (req, res) => {
 })
 
 app.put('/orders/:id', async (req, res) => {
-    const user_id = req.params.id
+    const order_id = req.params.id
     const tmp = req.body
     const arr = [tmp.date, tmp.status, order_id]
 
