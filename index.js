@@ -31,13 +31,13 @@ app.post('/users', async (req, res) => {
 })
 
 app.put('/users/:id', async (req, res) => {
-    const id_people = req.params.id
+    const user_id = req.params.id
     const tmp = req.body
     const arr = [tmp.name, tmp.email, user_id]
 
     const sql = ` update users 
                  set name = $1, 
-                        email = $2, 
+                        email = $2 
                     where user_id= $3`
 
     const resul = db.default.query(sql, arr)
@@ -48,7 +48,7 @@ app.put('/users/:id', async (req, res) => {
 
 app.delete('/users/:id', async (req, res) => {
 
-    const id_people = req.params.id
+    const user_id = req.params.id
     const sql = `delete from users where user_id = $1`
     const arr = [user_id]
 
@@ -69,7 +69,7 @@ app.get('/products', async function (req, res) {
 
 app.get('/products/:id', async (req, res)=>{
     
-    const id_user = req.params.id
+    const id_product = req.params.id
     const sql = `select * from products where id_product = ${id_product}`
     const result = await db.default.query(sql)
     res.json(result)
@@ -86,9 +86,9 @@ app.post('/products', async (req, res) => {
 })
 
 app.put('/products/:id', async (req, res) => {
-    const id_people = req.params.id
+    const id_product = req.params.id
     const temp = req.body
-    const arr = [tmp.name, tmp.description, tmp.price, tmp.stock, product_id]
+    const arr = [tmp.name, tmp.description, tmp.price, tmp.stock, id_product]
 
     const sql = ` update products
                  set name = $1, 
@@ -105,9 +105,9 @@ app.put('/products/:id', async (req, res) => {
 
 app.delete('/products/:id', async (req, res) => {
 
-    const id_people = req.params.id
-    const sql = `delete from products where product_id = $1`
-    const arr = [product_id]
+    const id_product = req.params.id
+    const sql = `delete from products where id_product = $1`
+    const arr = [id_product]
 
     const resul = await db.default.query(sql, arr)
 
