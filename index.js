@@ -126,7 +126,7 @@ app.get('/orders', async function (req, res) {
 
 app.get('/orders/:id', async (req, res)=>{
     
-    const user_id = req.params.id
+    const order_id = req.params.id
     const sql = `select * from orders where order_id = ${order_id}`
     const result = await db.default.query(sql)
     res.json(result)
