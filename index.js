@@ -12,8 +12,8 @@ app.get('/users', async function (req, res) {
 
 })
 
-app.get('/users/:id', async (req, res)=>{
-    
+app.get('/users/:id', async (req, res) => {
+
     const user_id = req.params.id
     const sql = `select * from users where user_id = ${user_id}`
     const result = await db.default.query(sql)
@@ -67,8 +67,8 @@ app.get('/products', async function (req, res) {
 
 })
 
-app.get('/products/:id', async (req, res)=>{
-    
+app.get('/products/:id', async (req, res) => {
+
     const product_id = req.params.id
     const sql = `select * from products where product_id = ${product_id}`
     const result = await db.default.query(sql)
@@ -124,8 +124,8 @@ app.get('/orders', async function (req, res) {
 
 })
 
-app.get('/orders/:id', async (req, res)=>{
-    
+app.get('/orders/:id', async (req, res) => {
+
     const order_id = req.params.id
     const sql = `select * from orders where order_id = ${order_id}`
     const result = await db.default.query(sql)
@@ -172,43 +172,46 @@ app.delete('/orders/:id', async (req, res) => {
 })
 
 
-app.get('/details', async function (req, res) {
+app.get('/orders/:order_id/details', async function (req, res) {
+    const order_id = req.params.order_id
+    const sql = `select a.detail_id, 
+                        a.order_id,
+                        a.product_id,
+                        a.quantity,
+                        a.price,
+                        b.name as product_name 
+                from details a 
+                inner join products b 
+                on a.product_id = b.product_id
+                where order_id = ${order_id}`
 
-    const sql = 'select * from details'
     const result = await db.default.query(sql)
     res.status(200).json(result)
 
 })
 
-app.get('/details/:id', async (req, res)=>{
-    
-    const detail_id = req.params.id
-    const sql = `select * from details where detail_id = ${detail_id}`
-    const result = await db.default.query(sql)
-    res.json(result)
-})
+app.post('/orders/:order_id/details', async (req, res) => {
 
-app.post('/details', async (req, res) => {
-
+    const order_id = req.params.order_id
     const tmp = req.body
     const str = 'insert into details (order_id, product_id, quantity, price) values ($1, $2, $3, $4)'
-    const arr = [tmp.order_id, tmp.product_id, tmp.quantity, tmp.price]
+    const arr = [order_id, tmp.product_id, tmp.quantity, tmp.price]
     const result = await db.default.query(str, arr)
     res.status(200).json({ message: "Detail Created" })
 
 })
 
-app.put('/details/:id', async (req, res) => {
-    const detail_id = req.params.id
+app.put('/orders/:order_id/details/:detail_id', async (req, res) => {
+
+    const detail_id = req.params.detail_id
     const tmp = req.body
-    const arr = [tmp.order_id, tmp.product_id, tmp.quantity, tmp.price, detail_id]
+    const arr = [ tmp.product_id, tmp.quantity, tmp.price, detail_id]
 
     const sql = ` update details
-                 set order_id = $1, 
-                     product_id = $2,
-                     quantity = $3,
-                     price = $4
-                    where detail_id= $5`
+                 set  product_id = $1,
+                     quantity = $2,
+                     price = $3
+                    where detail_id= $4`
 
     const resul = db.default.query(sql, arr)
 
@@ -216,9 +219,9 @@ app.put('/details/:id', async (req, res) => {
 
 })
 
-app.delete('/details/:id', async (req, res) => {
+app.delete('/orders/:order_id/details/:detail_id', async (req, res) => {
 
-    const detail_id = req.params.id
+    const detail_id = req.params.detail_id
     const sql = `delete from details where detail_id = $1`
     const arr = [detail_id]
 

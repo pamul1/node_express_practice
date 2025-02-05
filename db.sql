@@ -23,6 +23,7 @@ create table orders
     status Text check (status in ('Pending', 'Completed'))
 );
 
+SELECT * FROM details;
 create table details
 (
     detail_id SERIAL PRIMARY Key,
