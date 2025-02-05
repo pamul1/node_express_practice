@@ -135,8 +135,8 @@ app.get('/orders/:id', async (req, res)=>{
 app.post('/orders', async (req, res) => {
 
     const tmp = req.body
-    const str = 'insert into orders (date, status) values ($1, $2)'
-    const arr = [tmp.date, tmp.status]
+    const str = 'insert into orders (order_date, status, user_id) values ($1, $2, $3)'
+    const arr = [tmp.order_date, tmp.status, tmp.user_id]
     const result = await db.default.query(str, arr)
     res.status(200).json({ message: "Order Created" })
 
@@ -145,12 +145,13 @@ app.post('/orders', async (req, res) => {
 app.put('/orders/:id', async (req, res) => {
     const order_id = req.params.id
     const tmp = req.body
-    const arr = [tmp.date, tmp.status, order_id]
+    const arr = [tmp.order_date, tmp.status, tmp.user_id, order_id]
 
     const sql = ` update orders 
-                 set date = $1, 
-                     status = $2 
-                    where order_id= $3`
+                 set order_date = $1, 
+                     status = $2,
+                     user_id = $3
+                    where order_id= $4`
 
     const resul = db.default.query(sql, arr)
 
@@ -167,6 +168,63 @@ app.delete('/orders/:id', async (req, res) => {
     const resul = await db.default.query(sql, arr)
 
     res.json({ message: "Order Deleted" })
+
+})
+
+
+app.get('/details', async function (req, res) {
+
+    const sql = 'select * from details'
+    const result = await db.default.query(sql)
+    res.status(200).json(result)
+
+})
+
+app.get('/details/:id', async (req, res)=>{
+    
+    const detail_id = req.params.id
+    const sql = `select * from details where detail_id = ${detail_id}`
+    const result = await db.default.query(sql)
+    res.json(result)
+})
+
+app.post('/details', async (req, res) => {
+
+    const tmp = req.body
+    const str = 'insert into details (order_id, product_id, quantity, price) values ($1, $2, $3, $4)'
+    const arr = [tmp.order_id, tmp.product_id, tmp.quantity, tmp.price]
+    const result = await db.default.query(str, arr)
+    res.status(200).json({ message: "Detail Created" })
+
+})
+
+app.put('/details/:id', async (req, res) => {
+    const detail_id = req.params.id
+    const tmp = req.body
+    const arr = [tmp.order_id, tmp.product_id, tmp.quantity, tmp.price, detail_id]
+
+    const sql = ` update details
+                 set order_id = $1, 
+                     product_id = $2,
+                     quantity = $3,
+                     price = $4
+                    where detail_id= $5`
+
+    const resul = db.default.query(sql, arr)
+
+    res.json({ message: "Detail Updated" })
+
+})
+
+app.delete('/details/:id', async (req, res) => {
+
+    const detail_id = req.params.id
+    const sql = `delete from details where detail_id = $1`
+    const arr = [detail_id]
+
+    const resul = await db.default.query(sql, arr)
+
+    res.json({ message: "Detail Deleted" })
 
 })
 
