@@ -1,9 +1,11 @@
-const pg = require('pg-promise')
+import pg from 'pg-promise'
+import dotenv from 'dotenv'
+dotenv.config()
+
 const pgc = pg()
+const str = process.env.CN_STR
 
-const str = 'postgresql://neondb_owner:npg_rQxaD0YFp7He@ep-black-scene-a5j6rgvq-pooler.us-east-2.aws.neon.tech/neondb?sslmode=require'
-
-const db = pgc(str)
+export const  db = pgc(str)
 
 db.connect()
     .then(() => {
@@ -12,5 +14,3 @@ db.connect()
     .catch((err) => {
         console.log(` Error Connection ${err} `)
     })
-
-exports.default = db
